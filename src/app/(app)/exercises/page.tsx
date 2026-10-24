@@ -80,12 +80,12 @@ export default async function ExercisesPage({ searchParams }: PageProps<"/exerci
         <Link
           href={libraryHref({ ...query, mine: !query.mine })}
           className="flex min-h-11 items-center gap-2 text-body font-semibold text-text-primary"
-          aria-label={query.mine ? "Showing exercises for your equipment. Show all exercises." : "Showing all exercises. Show only exercises for your equipment."}
         >
           <span aria-hidden className={cn("relative h-6 w-10 rounded-full transition-colors", query.mine ? "bg-accent-primary" : "bg-surface-interactive")}>
             <span className={cn("absolute top-1 size-4 rounded-full bg-background-primary transition-[left]", query.mine ? "left-5" : "left-1")} />
           </span>
           My equipment only
+          <span className="sr-only">{query.mine ? ": on. Select to show all exercises." : ": off. Select to show only exercises for your equipment."}</span>
         </Link>
       </div>
 

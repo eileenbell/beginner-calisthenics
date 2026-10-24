@@ -318,7 +318,7 @@ function MilestoneCard({ view }: { view: PathwayView }) {
 
       <ol className="flex items-start justify-between gap-1">
         {view.stages.map((stage) => (
-          <li key={stage.index} className={cn("flex min-w-0 flex-1 flex-col items-center gap-1 text-center", (stage.status === "next" || stage.status === "upcoming") && "opacity-50")}>
+          <li key={stage.index} className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center">
             <span
               aria-hidden
               className={cn(
@@ -330,7 +330,12 @@ function MilestoneCard({ view }: { view: PathwayView }) {
             >
               {stage.status === "done" ? <Check className="size-4" /> : stage.status === "current" ? stage.index : stage.index === view.stages.length ? <Flag className="size-3.5" /> : <Lock className="size-3.5" />}
             </span>
-            <span className={cn("line-clamp-2 text-[0.6875rem] font-semibold leading-tight", stage.status === "current" ? "text-accent-primary" : "text-text-primary")}>
+            <span
+              className={cn(
+                "line-clamp-2 text-[0.6875rem] font-semibold leading-tight",
+                stage.status === "current" ? "text-accent-primary" : stage.status === "done" ? "text-text-primary" : "text-text-secondary",
+              )}
+            >
               {stage.index}. {shortStageName(stage.exercise.name)}
             </span>
             <span className={cn("text-[0.625rem] font-bold uppercase", stage.status === "done" ? "text-accent-strong" : "text-text-secondary")}>

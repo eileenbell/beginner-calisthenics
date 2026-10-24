@@ -41,7 +41,7 @@ export async function registerAndOnboard(page: Page, opts: OnboardingOptions = {
     await page.getByRole("button", { name: /skip the starting-point questions/i }).click();
   } else {
     await page.getByText(opts.push ?? "Hands on a kitchen counter or table").click();
-    if (opts.pushReps !== undefined) await page.getByLabel("Push-up reps").fill(String(opts.pushReps));
+    if (opts.pushReps !== undefined) await page.getByRole("spinbutton", { name: "Push-up reps" }).fill(String(opts.pushReps));
     await page.getByRole("button", { name: /continue to schedule/i }).click();
   }
 
@@ -122,7 +122,8 @@ export async function completeWorkout(
     }
     if (await markSetButton(page).isVisible()) {
       const value = reps?.((await page.locator("#exercise-name").textContent()) ?? "");
-      if (value !== undefined) await page.getByLabel("Reps completed").fill(String(value));
+      const field = page.getByRole("spinbutton", { name: "Reps completed" });
+      if (value !== undefined && (await field.isVisible())) await field.fill(String(value));
       await logCurrentSet(page);
       continue;
     }

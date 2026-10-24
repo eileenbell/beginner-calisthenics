@@ -27,7 +27,8 @@
 
   /* Colour: screen values without a Figma variable */
   --color-success-container: #3d4c23;
-  --color-on-success-container: #131f00;
+  /* Figma has #131f00 here, which is 1.8:1 on the container. #d8e9b3 passes AA (about 7:1). */
+  --color-on-success-container: #d8e9b3;
   --color-accent-strong: #b0d41a;
   --color-accent-muted: #bccd99;
   --color-success-muted: #aabc88;
