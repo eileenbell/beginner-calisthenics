@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/*
+ * FORM design tokens.
+ *
+ * Values come from the Figma variables in the approved file (page "Design
+ * Tokens" and the Developer Handoff page). Anything marked "screen value" is a
+ * raw colour used on the approved screens that has no Figma variable yet; it is
+ * kept here so it is named once rather than repeated as a hex code.
+ */
+@theme {
+  /* Colour: Figma variables */
+  --color-background-primary: #0d0e11;
+  --color-surface-secondary: #1b1b1f;
+  --color-surface-elevated: #1f1f23;
+  --color-surface-interactive: #292a2d;
+  --color-accent-primary: #ccf13c;
+  --color-text-primary: #e3e2e6;
+  --color-text-secondary: #c5c9af;
+  --color-text-on-accent: #171e00;
+  --color-border-default: #343538;
+  --color-state-success: #d8e9b3;
+  --color-state-warning: #e3e2e6;
+  --color-state-error: #ffb4ab;
+  --color-state-error-surface: #690005;
+  --color-state-disabled: #8f937b;
+
+  /* Colour: screen values without a Figma variable */
+  --color-success-container: #3d4c23;
+  --color-on-success-container: #131f00;
+  --color-accent-strong: #b0d41a;
+  --color-accent-muted: #bccd99;
+  --color-success-muted: #aabc88;
+  --color-on-accent-muted: #586c00;
+  --color-surface-today: #38393c;
+  --color-error-tint: rgb(147 0 10 / 0.2);
+
+  /* Typography: Figma text styles */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-display--letter-spacing: -0.05rem;
+  --text-title: 1.75rem;
+  --text-title--line-height: 2.25rem;
+  --text-title--letter-spacing: -0.044rem;
+  --text-section: 1.375rem;
+  --text-section--line-height: 1.75rem;
+  --text-section--letter-spacing: -0.034rem;
+  --text-card: 1.125rem;
+  --text-card--line-height: 1.5rem;
+  --text-body-lg: 1rem;
+  --text-body-lg--line-height: 1.5rem;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.375rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.125rem;
+  /* Uppercase eyebrow labels. The screens used 10px; the handoff flags that as
+     too small, so labels use the 12px caption size with a tighter line. */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1rem;
+  --text-label--letter-spacing: 0.04em;
+  --text-button: 0.875rem;
+  --text-button--line-height: 1.25rem;
+  --text-metric: 2.5rem;
+  --text-metric--line-height: 3rem;
+  --text-metric--letter-spacing: -0.0625rem;
+
+  /* Radius: Figma variables */
+  --radius-small: 8px;
+  --radius-card: 12px;
+  --radius-large: 16px;
+
+  /* Breakpoints: Figma variables */
+  --breakpoint-tablet: 48rem;
+  --breakpoint-desktop: 90rem;
+}
+
+:root {
+  /* Layout: Figma variables */
+  --layout-mobile-width: 390px;
+  --layout-screen-margin: 16px;
+  --layout-card-padding: 16px;
+  --layout-section-gap: 24px;
+  --layout-touch-min: 48px;
+  --layout-header-height: 64px;
+  --layout-nav-height: 80px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: dark;
+}
+
+html {
+  background: var(--color-background-primary);
+}
+
+body {
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Visible keyboard focus everywhere (handoff: accessibility). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  font-weight: 700;
+  text-transform: uppercase;
+}
