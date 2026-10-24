@@ -2,6 +2,18 @@
 
 FORM runs on two free services: **Supabase** (database and sign-in) and **Vercel** (the website). Nothing else is needed.
 
+## Current deployment (24 October 2026)
+
+| | |
+| --- | --- |
+| Live site | https://form-calisthenics.vercel.app |
+| Vercel | Project `form-calisthenics` in the FitBattle team (Hobby, free). Framework preset Next.js. Env vars: Supabase URL and publishable key (Production and Preview), `NEXT_PUBLIC_SITE_URL` (Production) |
+| Supabase | Project `form-calisthenics` (ref `kigzaawtrdrucnrlailp`), Sydney `ap-southeast-2`, Free plan. All three migrations applied |
+| Auth | Site URL and redirect URLs set to the live address, plus `http://localhost:3000/**`. Email confirmation off, sign-ups on |
+| Auto-deploy | Not connected yet. Vercel needs the GitHub account linked first (Vercel, Account Settings, Authentication). Until then, deploy with `npx vercel@latest deploy --prod` from a clone |
+
+The database password wasn't stored. Reset it under Project Settings, Database if you need direct database access.
+
 ## What you need
 
 - A Supabase account with room for one more free project (Supabase Free allows two active projects per organisation).

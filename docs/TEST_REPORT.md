@@ -62,10 +62,20 @@ The first a11y run found three real problems, which were fixed before the result
 
 ## What these tests don't prove
 
-- **Hosted Supabase Auth.** End-to-end tests run against the local stand-in in `scripts/local-supabase`, which mimics Supabase Auth's API (sign-up, sign-in, refresh, recovery, PKCE and token-hash links). The live deployment was checked by hand; see `DEPLOYMENT_GUIDE.md`, step 6.
+- **Hosted Supabase Auth.** End-to-end tests run against the local stand-in in `scripts/local-supabase`, which mimics Supabase Auth's API (sign-up, sign-in, refresh, recovery, PKCE and token-hash links). The live site has only had the signed-out checks below so far.
 - **Other browsers.** Only Chromium is automated. Check iOS Safari by hand.
 - **Screen readers.** Axe and keyboard tests are not a substitute for a VoiceOver or TalkBack pass.
 - **Load.** No performance or load testing was done.
+
+## Live deployment check (24 October 2026)
+
+Against https://form-calisthenics.vercel.app, without an account:
+
+- The home, sign-up and sign-in pages load publicly (no Vercel login wall) with no errors.
+- Every signed-in page (Today, Progress, Exercises, Skills, Profile, onboarding) redirects signed-out visitors to sign in and returns them afterwards.
+- The server reaches the Supabase project.
+
+**Not yet done:** a signed-in run-through on the live site (sign up, onboard, log a set, refresh, visit each tab, delete the account). The steps are in `DEPLOYMENT_GUIDE.md`, step 6. Record the result here once it's done.
 
 ## Running them yourself
 

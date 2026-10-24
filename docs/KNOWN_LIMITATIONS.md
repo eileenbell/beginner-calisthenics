@@ -35,6 +35,7 @@ What isn't finished, what was only partly verified, and what to fix before a wid
 ## Operations
 
 - **Free tiers.** Supabase Free pauses a project after a week without activity and has storage and bandwidth caps. Vercel Hobby is for non-commercial use. Both need upgrading before any commercial launch.
+- **No automatic deploys yet.** The Vercel project isn't connected to GitHub, so pushing to `main` doesn't update the live site until it is (see `DEPLOYMENT_GUIDE.md`).
 - **No error monitoring or analytics.** Server errors appear in Vercel's function logs only.
 - **No automated backups** beyond what Supabase Free includes. Free plans don't include point-in-time recovery.
 - **Account deletion is immediate** and can't be undone. There's no grace period.

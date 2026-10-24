@@ -4,6 +4,8 @@ A mobile-first web app that takes complete beginners through a 12-week bodyweigh
 
 Built with Next.js (App Router), React, TypeScript and Tailwind, with Supabase for Postgres, Auth and row level security. Hosted on Vercel.
 
+**Live:** https://form-calisthenics.vercel.app
+
 More detail lives in `docs/`.
 
 ## What's in the MVP
