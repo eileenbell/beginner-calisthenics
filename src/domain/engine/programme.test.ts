@@ -171,6 +171,78 @@ describe("beginner safety", () => {
   });
 });
 
+describe("skill goals", () => {
+  const plan = (p: UserTrainingProfile, unlocked: string[], template: "A" | "B" | "U" | "L" = "A") =>
+    buildSessionPlan({
+      profile: p,
+      states: statesFor(p),
+      week: 3,
+      template,
+      daysSinceLastSession: 2,
+      unlockedSkills: new Set(unlocked as never[]),
+    });
+  const main = (items: ReturnType<typeof plan>["items"]) => items.filter((i) => i.block === "main");
+
+  it.each([
+    ["skill_l_sit", "l_sit", "l_sit"],
+    ["skill_crow", "crow", "crow_pose"],
+    ["skill_pistol", "pistol", "pistol_squat"],
+  ] as const)("never schedules %s work until it's unlocked, then practises it first", (goal, family, skill) => {
+    const p = profile({ goals: [goal], sessionMinutes: 40 });
+    expect(plan(p, []).items.some((i) => i.familyId === family)).toBe(false);
+    const unlocked = main(plan(p, [skill]).items);
+    expect(unlocked[0].familyId).toBe(family);
+    expect(unlocked[0].note).toMatch(/skill practice/i);
+  });
+
+  it("gives 25-minute sessions skill practice in place of the fifth exercise", () => {
+    const p = profile({ goals: ["skill_crow"], sessionMinutes: 25 });
+    const items = main(plan(p, ["crow_pose"]).items);
+    expect(items).toHaveLength(5);
+    expect(items[0].familyId).toBe("crow");
+    // Without a skill goal, 25 minutes stays five template exercises with no skill slot.
+    const plain = main(plan(profile({ sessionMinutes: 25 }), ["crow_pose"]).items);
+    expect(plain).toHaveLength(5);
+    expect(plain.some((i) => i.note?.startsWith("Skill practice"))).toBe(false);
+  });
+
+  it("keeps the session's own fifth exercise when the skill is still locked", () => {
+    const p = profile({ goals: ["skill_l_sit"], sessionMinutes: 25 });
+    const items = main(plan(p, []).items);
+    expect(items).toHaveLength(5);
+    expect(items.some((i) => i.familyId === "l_sit")).toBe(false);
+    // L-sit's preparation, the hollow body, takes the practice slot until then.
+    expect(items[0].familyId).toBe("hollow");
+  });
+
+  it("has no skill practice in 15-minute sessions", () => {
+    const p = profile({ goals: ["skill_pistol"], sessionMinutes: 15 });
+    const items = main(plan(p, ["pistol_squat"]).items);
+    expect(items).toHaveLength(4);
+    expect(items.some((i) => i.familyId === "pistol")).toBe(false);
+  });
+
+  it("puts a specific skill ahead of general goals in the practice slot", () => {
+    const p = profile({ goals: ["core_strength", "skill_l_sit"], sessionMinutes: 40 });
+    expect(main(plan(p, ["l_sit"], "B").items)[0].familyId).toBe("l_sit");
+  });
+
+  it("practises the foundations for long-term skills", () => {
+    const p = profile({ goals: ["skill_muscle_up"], sessionMinutes: 40, equipment: ["pullup_bar"] });
+    const items = main(plan(p, [], "A").items);
+    expect(items[0].familyId).toBe("pull_up");
+  });
+
+  it("warms up wrists for arm balances and hips for pistols", () => {
+    const crow = plan(profile({ goals: ["skill_crow"], sessionMinutes: 25 }), ["crow_pose"], "L");
+    expect(main(crow.items).some((i) => i.familyId === "crow")).toBe(true);
+    expect(crow.items.some((i) => i.exerciseId === "wrist_prep")).toBe(true);
+    const pistol = plan(profile({ goals: ["skill_pistol"], sessionMinutes: 25 }), ["pistol_squat"], "U");
+    expect(main(pistol.items).some((i) => i.familyId === "pistol")).toBe(true);
+    expect(pistol.items.some((i) => i.exerciseId === "kneeling_hip_flexor_stretch")).toBe(true);
+  });
+});
+
 describe("schedule", () => {
   it("builds 12 weeks of sessions with no consecutive full-body days", () => {
     for (const days of [2, 3] as const) {

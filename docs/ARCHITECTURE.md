@@ -27,7 +27,7 @@ The app never uses the Supabase service role key. Every query runs as the signed
 
 Pure TypeScript with no framework or database imports. It holds:
 
-- `content/`: the exercise library (68 exercises in 13 movement families), skills, milestones and achievements. This is the single source of truth. `npm run db:reference` generates the reference-data migration from it, and a unit test fails if the two drift apart.
+- `content/`: the exercise library (79 exercises in 16 movement families), skills, milestones, achievements and the long-term skill roadmaps (`roadmaps.ts`). This is the single source of truth. `npm run db:reference` generates the reference-data migration from it, and a unit test fails if the two drift apart.
 - `engine/assessment.ts`: turns onboarding answers into a starting variation and target per family.
 - `engine/programme.ts`: builds the 12-week schedule and each session's plan (warm-up, main block, cool-down) from preferences, equipment and current progression state.
 - `engine/progression.ts`: evaluates one exercise's result and returns the new state plus a decision with a plain-language reason. Pain rules come first and can't be bypassed.

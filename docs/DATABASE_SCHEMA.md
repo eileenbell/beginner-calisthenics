@@ -1,10 +1,15 @@
 # Database schema
 
-Postgres on Supabase. Three migrations in `supabase/migrations`, applied in order:
+Postgres on Supabase. Four migrations in `supabase/migrations`, applied in order:
 
 1. `20261024000100_initial_schema.sql`: tables, indexes, grants, row level security and the new-user trigger.
 2. `20261024000200_training_functions.sql`: RPC functions.
-3. `20261024000300_reference_data.sql`: exercises, progressions, skills, milestones and achievements, generated from `src/domain/content` by `npm run db:reference`.
+3. `20261024000300_reference_data.sql`: the first version of the reference data (exercises, progressions, skills, milestones and achievements).
+4. `20261024000400_skill_goals_reference_data.sql`: the current reference data, generated from `src/domain/content` by `npm run db:reference`. Adds the L-sit, crow pose and pistol squat ladders, skills, milestones and achievements. Every statement is an upsert (progressions are cleared and re-inserted), so it applies cleanly on top of migration 3.
+
+When content changes again, point `REFERENCE_MIGRATION` in `scripts/reference-data.ts` at a new file and regenerate. Never edit a migration that's already been applied.
+
+New skill goals (`skill_l_sit`, `skill_crow` and so on) needed no schema change: `training_preferences.goals` only limits how many goals there are. People who signed up before a family existed have no `user_exercise_progress` row for it; the server treats them as starting at the first step, and `complete_workout` creates the row the first time they train it.
 
 `supabase/local/bootstrap.sql` only exists for the local stand-in (it creates the `auth` schema and roles that hosted Supabase already has). Never run it against a hosted project.
 
@@ -12,7 +17,7 @@ Postgres on Supabase. Three migrations in `supabase/migrations`, applied in orde
 
 | Table | Purpose |
 | --- | --- |
-| `exercises` | 68 exercises: family, level, measure (reps or seconds), per-side flag, muscles, equipment (`equipment_any_of`, `equipment_all_of`), full guidance in `content` (JSON) and `validation_status` |
+| `exercises` | 79 exercises: family, level, measure (reps or seconds), per-side flag, muscles, equipment (`equipment_any_of`, `equipment_all_of`), full guidance in `content` (JSON) and `validation_status` |
 | `exercise_progressions` | Easier, harder and alternative links between exercises |
 | `skills` | Skill pathways, their families, equipment and readiness gate |
 | `skill_milestones` | Milestones per skill: exercise, sets, minimum reps or seconds |

@@ -39,6 +39,19 @@ Evidence quality scale used throughout:
 |---|---|---|---|---|
 | S17 | Vendor articles summarising band-assisted vs eccentric pull-up training (e.g. https://bullbarfit.com/blogs/updates/youre-probably-using-band-assisted-pull-ups-wrong-heres-what-the-research-actually-says ; https://www.boxrox.com/?p=242147) | 2024–2026 | E | Claim that eccentric (negative) training outperforms band assistance for first pull-up. **Original studies not located; treated as unverified.** We include both negatives and band assistance and do not claim one is superior. |
 
+## Skill progressions (added 24 October 2026)
+
+All grade **D**: coaching guides and community resources, not research. Pages were checked through search summaries; the order of steps and the pass marks differ between them, and the app says so. Nothing here claims an evidence base for one ladder over another.
+
+| # | Skill | Source(s) | Grade | What we used it for |
+|---|---|---|---|---|
+| S18 | L-sit | r/bodyweightfitness wiki, L-sit (mirror): https://reddit.sudovanilla.org/r/bodyweightfitness/wiki/exercises/l-sit · Antranik: https://antranik.org/?p=6184 · GMB: https://gmb.io/l-sit/ | D | Ladder: foot-supported L-sit, tuck L-sit, one-leg L-sit, full L-sit; parallettes or bars for hand clearance |
+| S19 | Crow pose / frog stand | Caliverse: https://www.caliverse.app/exercises/frog-stand-65 · Dieringe: https://dieringe.com/exercises/crow-pose | D | Set-up (hands down, knees on upper arms, weight shifted forward), lifting one foot then both, short holds |
+| S20 | Pistol squat | Akuaku, Squat to pistol squat: https://akuaku.org/Sarco+/progression-squat-to-pistol.html · Breaking Muscle: https://breakingmuscle.com/whats-preventing-you-from-doing-pistol-squats-how-to-progress-pistols/ | D | Ladder: assisted with a fixed support, box pistol, lower boxes for more depth, full pistol. Some guides suggest a door frame for support; we don't use it |
+| S21 | Freestanding handstand | GMB: https://gmb.io/freestanding-handstand/ · Ganbaru Method: https://join.ganbarumethod.com/handstand-drills-to-get-you-off-the-wall/ · Gravity Fitness: https://gravity.fitness/blogs/training/getting-familiar-with-the-floor-how-to-get-your-first-handstand · Bodybuilding.com: https://bodybuilding.com/content/ultimate-beginners-guide-to-handstands.html | D | Order: chest-to-wall holds (20–30 s over several sets suggested), learn a cartwheel bail first, heel pulls, toe pulls, gentle kick-ups to free balance |
+| S22 | Muscle-up | r/bodyweightfitness wiki, muscle-up (mirror): https://twt.omada.cafe/r/bodyweightfitness/wiki/exercises/muscle-up · CrossFit, Ring training part 3: https://www.crossfit.com/essentials/crossfit-ring-training-part-3 · Breaking Muscle: https://breakingmuscle.com/dissecting-muscle-up-mastery/ · StrengthLog: https://www.strengthlog.com/bar-muscle-up/ | D | Pass marks range from about 5 strict chest-to-bar pull-ups and 5 dips to 10–15 of each (CrossFit calls its numbers guidelines); false grip for rings; transition negatives; resting the chest on the bar at first; connective tissue adapts more slowly than muscle |
+| S23 | Front lever | Wikipedia: https://en.wikipedia.org/wiki/Front_lever · Antranik, static holds: https://antranik.org/progression-exercises-for-static-holds/ · Dieringe, advanced tuck: https://dieringe.com/exercises/advanced-tuck-front-lever · Fitness Volt: https://fitnessvolt.com/calisthenics/front-lever/ | D | Order: tuck, advanced tuck (flat back, about 10 s suggested before moving on), one leg, straddle, full; one guide suggests 10 pull-ups and a 30 s active hang before starting |
+
 ## Privacy and compliance (Australia)
 
 | # | Source | Date | Grade | Notes |

@@ -6,7 +6,7 @@ import { Notice } from "@/components/ui/notice";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { addDays, GOALS } from "@/domain";
 import { signOut } from "@/features/auth/actions";
-import { GOAL_OPTIONS } from "@/features/onboarding/answers";
+import { ALL_GOAL_OPTIONS } from "@/features/onboarding/answers";
 import { EQUIPMENT_LABELS, fullDate, plural, weekdayLong } from "@/features/training/format";
 import { DeleteAccountForm, NameForm, NewBlockForm, PasswordForm } from "@/features/profile/forms";
 import { displayName } from "@/server/auth";
@@ -28,7 +28,7 @@ export default async function ProfilePage({ searchParams }: PageProps<"/profile"
   const name = account.profile?.display_name ?? "";
   const done = schedule.filter((s) => s.status === "completed").length;
   const ends = addDays(programme.started_on, programme.weeks * 7 - 1);
-  const goals = GOALS.filter((g) => prefs.goals.includes(g)).map((g) => GOAL_OPTIONS.find((o) => o.id === g)?.title ?? g);
+  const goals = GOALS.filter((g) => prefs.goals.includes(g)).map((g) => ALL_GOAL_OPTIONS.find((o) => o.id === g)?.title ?? g);
   const kit = prefs.equipment.filter((e) => e !== "none").map((e) => EQUIPMENT_LABELS[e]);
   const flash = typeof notice === "string" ? NOTICES[notice] : undefined;
 

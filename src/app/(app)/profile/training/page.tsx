@@ -2,7 +2,8 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChoiceCard } from "@/components/ui/choice";
-import { EQUIPMENT_OPTIONS, GOAL_OPTIONS } from "@/features/onboarding/answers";
+import { Pill } from "@/components/ui/pill";
+import { EQUIPMENT_OPTIONS, GOAL_OPTIONS, SKILL_GOAL_OPTIONS } from "@/features/onboarding/answers";
 import { ScheduleFields } from "@/features/onboarding/schedule-fields";
 import { TrainingSettingsForm } from "@/features/profile/forms";
 import { requireTrainingAccount } from "@/server/auth";
@@ -33,6 +34,22 @@ export default async function TrainingSettingsPage() {
           <legend className="eyebrow pb-2 text-text-secondary">Goals (up to three)</legend>
           {GOAL_OPTIONS.map((g) => (
             <ChoiceCard key={g.id} type="checkbox" name="goals" value={g.id} title={g.title} body={g.body} defaultChecked={goals.has(g.id)} />
+          ))}
+        </fieldset>
+
+        <fieldset className="space-y-3">
+          <legend className="eyebrow pb-2 text-text-secondary">Specific moves (count towards your three goals)</legend>
+          {SKILL_GOAL_OPTIONS.map((g) => (
+            <ChoiceCard
+              key={g.id}
+              type="checkbox"
+              name="goals"
+              value={g.id}
+              title={g.title}
+              body={g.body}
+              defaultChecked={goals.has(g.id)}
+              badge={g.longTerm ? <Pill tone="outline">Long-term goal</Pill> : undefined}
+            />
           ))}
         </fieldset>
 

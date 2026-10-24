@@ -2,6 +2,7 @@ export * from "./types";
 export * from "./content/exercises";
 export * from "./content/families";
 export * from "./content/skills";
+export * from "./content/roadmaps";
 export * from "./engine/catalogue";
 export * from "./engine/progression";
 export * from "./engine/assessment";

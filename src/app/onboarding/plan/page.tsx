@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { FlowShell } from "@/components/shell/flow-shell";
 import { Notice } from "@/components/ui/notice";
 import { Pill } from "@/components/ui/pill";
-import { getExercise, SUCCESS_EXPOSURES_TO_PROGRESS } from "@/domain";
+import { getExercise, isSkillGoal, SUCCESS_EXPOSURES_TO_PROGRESS } from "@/domain";
 import { StepIndicator } from "@/features/auth/step-indicator";
 import { completeAnswers } from "@/features/onboarding/answers";
 import { SaveAndExit } from "@/features/onboarding/exit-button";
@@ -90,7 +90,9 @@ export default async function PlanStep() {
               <p className="eyebrow text-accent-primary">Pathway target</p>
               <p className="font-display text-section font-bold">{target.milestone.title}</p>
               <p className="text-body text-text-secondary">
-                {target.skill.name} pathway. Milestones along the way are recorded as you log your sets.
+                {target.roadmap ? `The first stage of your ${target.roadmap.name.toLowerCase()} build-up, on the ${target.skill.name} pathway.` : `${target.skill.name} pathway.`}
+                {target.skill.gate ? " It unlocks once the basics are in place, and your plan builds towards it until then." : ""} Milestones along the way are
+                recorded as you log your sets.
               </p>
             </div>
           </div>
@@ -119,6 +121,13 @@ export default async function PlanStep() {
             </p>
           </div>
         </section>
+
+        {profile.sessionMinutes === 15 && profile.goals.some(isSkillGoal) && (
+          <Notice tone="info" title="About your skill goal">
+            15-minute sessions don&apos;t have room for skill practice, so your skill goal shapes which pathways are highlighted but not the
+            sessions themselves. Choose 25 or 40 minutes if you&apos;d like to practise it in your workouts.
+          </Notice>
+        )}
 
         {notices.length > 0 && (
           <Notice tone="info" title="Based on your equipment">

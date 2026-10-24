@@ -8,23 +8,23 @@ Run on 24 October 2026 in the build environment (Linux, Node 22, Chromium from P
 | --- | --- | --- |
 | Lint | `npm run lint` | No errors or warnings |
 | Types | `npm run typecheck` | No errors |
-| Unit tests | `npm test` | 379 passed, 0 failed (11 files) |
+| Unit tests | `npm test` | 421 passed, 0 failed (11 files) |
 | Database tests | `npm run test:db` | 38 passed, 0 failed (2 files) |
-| Production build | `npm run build` | Succeeds; 29 routes |
-| End-to-end, dev server | `npm run test:e2e` | 16 passed, 0 failed |
-| End-to-end, production build | `E2E_PROD=1 npm run test:e2e` | 16 passed, 0 failed (1.3 min) |
+| Production build | `npm run build` | Succeeds; 30 routes |
+| End-to-end, dev server | `npm run test:e2e` | 19 passed, 0 failed |
+| End-to-end, production build | `E2E_PROD=1 npm run test:e2e` | 19 passed, 0 failed (1.7 min) |
 
 ## What the tests cover
 
 ### Unit (`src/**/*.test.ts`, `tests/unit`)
 
-- **Content integrity** (`content.test.ts`): unique ids, every exercise cites a source, none claims professional review, no improvised anchors (doors, towels), alternatives sit at the same level, fallback families end in a no-equipment option, the push-up path starts at the wall, no dips before dip preparation, handstand work is gated.
-- **Assessment** (`assessment.test.ts`): onboarding answers map to the right starting variation and a sub-maximal target, including skipped assessments, low confidence and no pull-up bar; milestones are never awarded for sets logged with pain or poor control.
-- **Programme** (`programme.test.ts`): 12 weeks with no back-to-back full-body days, every major pattern each week, only available equipment, warm-up then main block then cool-down, exercise counts that fit 15, 25 and 40 minutes, wrist preparation whenever hands bear weight, paused and locked families left out with an explanation, and an upper/lower split at four days.
+- **Content integrity** (`content.test.ts`): unique ids, every exercise cites a source, none claims professional review, no improvised anchors (doors, towels), alternatives sit at the same level, fallback families end in a no-equipment option, the push-up path starts at the wall, no dips before dip preparation, handstand, L-sit, crow and pistol work is gated, the new skill ladders need no equipment, every long-term skill goal has a roadmap whose first phase points at real pathways, and roadmaps contain no time promises.
+- **Assessment** (`assessment.test.ts`): onboarding answers map to the right starting variation and a sub-maximal target, including skipped assessments, low confidence and no pull-up bar; families added after sign-up start at the first step without touching saved progress; milestones are never awarded for sets logged with pain or poor control.
+- **Programme** (`programme.test.ts`): 12 weeks with no back-to-back full-body days, every major pattern each week, only available equipment, warm-up then main block then cool-down, exercise counts that fit 15, 25 and 40 minutes, wrist preparation whenever hands bear weight, paused and locked families left out with an explanation, and an upper/lower split at four days. Skill goals: L-sit, crow and pistol work never appears until unlocked and then comes first; 25-minute sessions swap their fifth exercise for skill practice only with a skill goal, and keep it when the skill is locked; 15-minute sessions have none; specific skills come before general goals; long-term skills practise their foundations; wrist and hip warm-ups follow.
 - **Progression** (`progression.test.ts`): moving up needs top-of-range sets, good control and the right rating twice (once if too easy); pain always swaps or pauses; skips and easier swaps behave; completion alone never progresses.
 - **Calendar** (`calendar.test.ts`): date maths, suggested training days, rest-day rules for each frequency, programme weeks, and rescheduling that keeps completed sessions.
 - **Player state** (`player-state.test.ts`): the workout reducer, including resuming after a refresh, rest between sets, freezing and restoring the rest timer, feedback after the last set, skips and corrections.
-- **Onboarding, pathways, library and progress** (`tests/unit`): answer validation, pathway gating and pain re-locking, search and filters, swaps never harder than planned, progress counting only logged sets, redirect safety (`safeNextPath` rejects `//evil`, `https://…` and header injection).
+- **Onboarding, pathways, library and progress** (`tests/unit`): answer validation (including skill goals within the three-goal limit), pathway gating and pain re-locking, the featured pathway falling back to the one that builds towards a locked skill, a pathway target for every goal, search and filters, swaps never harder than planned, progress counting only logged sets, redirect safety (`safeNextPath` rejects `//evil`, `https://…` and header injection).
 - **Reference data** (`reference-data.test.ts`): the SQL migration matches the TypeScript content exactly.
 - **Class merging** (`cn.test.ts`).
 
@@ -56,7 +56,10 @@ Run against Postgres 16 with Supabase's `anon` and `authenticated` roles, JWT cl
 | isolation | Another user gets 404 for someone else's history, workout and summary pages |
 | keyboard | The app shell starts with a visible skip link |
 | keyboard | A set can be logged, rest skipped, and a dialog opened and closed with the keyboard alone |
-| a11y | Axe WCAG 2.2 AA audit plus a no-sideways-scroll check on 15 pages (5 public, 9 app pages and the workout player) at 390, 768 and 1440 px |
+| skills | Choosing crow pose shows its target and the 15-minute note on the plan; the pathway is locked with its reason; the pathway page explains what it involves and lists every stage and prerequisite |
+| skills | A muscle-up goal is marked on its roadmap card; the roadmap has four phases, the first "In FORM now" and linking to the First Pull-Up pathway, which shows as a focus pathway |
+| skills | A skill goal added in training settings is saved and shown on Profile |
+| a11y | Axe WCAG 2.2 AA audit plus a no-sideways-scroll check on 17 pages (5 public, 11 app pages including a skill pathway and a roadmap, and the workout player) at 390, 768 and 1440 px |
 
 The first a11y run found three real problems, which were fixed before the results above: text on the success container colour at 1.8:1 contrast, upcoming pathway stages dimmed below 4.5:1 on Today, and the equipment toggle's accessible name not including its visible label.
 

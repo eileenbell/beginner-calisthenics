@@ -6,6 +6,7 @@ import {
   localDate,
   unlockedSkills,
   weekOf,
+  withDefaultStates,
   type FamilyId,
   type FamilyState,
   type PainEvent,
@@ -83,7 +84,7 @@ export const getTrainingSnapshot = cache(async (): Promise<TrainingSnapshot> => 
   ]);
 
   const progressRows = check(progress, "your progress") as ProgressRow[];
-  const states = new Map<FamilyId, FamilyState>(progressRows.map((r) => [r.family_id, toFamilyState(r)]));
+  const states = withDefaultStates(new Map<FamilyId, FamilyState>(progressRows.map((r) => [r.family_id, toFamilyState(r)])));
   const now = new Date();
   const today = localDate(now, account.preferences.time_zone);
   const rawWeek = Math.max(1, weekOf(account.programme.started_on, today));

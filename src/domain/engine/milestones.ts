@@ -108,5 +108,8 @@ export function earnedAchievements(facts: AchievementFacts): string[] {
   if (facts.progressions >= 1) out.push("first_progression");
   if (facts.achievedMilestones.has("push_first_floor")) out.push("first_push_up");
   if (facts.achievedMilestones.has("pull_first")) out.push("first_pull_up");
+  if (facts.achievedMilestones.has("lsit_first_5")) out.push("first_l_sit");
+  if (facts.achievedMilestones.has("crow_first_5")) out.push("first_crow");
+  if (facts.achievedMilestones.has("pistol_first")) out.push("first_pistol");
   return out;
 }

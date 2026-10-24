@@ -86,6 +86,15 @@ export default async function PathwayPage({ params }: PageProps<"/skills/[pathwa
         </div>
       </div>
 
+      {def.involves && (
+        <section aria-labelledby="involves" className="space-y-2">
+          <h2 id="involves" className="eyebrow text-text-secondary">
+            What it involves
+          </h2>
+          <p className="text-body">{def.involves}</p>
+        </section>
+      )}
+
       {view.current && view.state && !locked ? (
         <Card className="space-y-3 ring-1 ring-accent-primary/30">
           <div className="space-y-1">

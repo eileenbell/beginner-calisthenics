@@ -19,6 +19,8 @@ const APP_PAGES = [
   "/exercises/wall_push_up",
   "/skills",
   "/skills/push_up_mastery",
+  "/skills/crow_pose",
+  "/skills/roadmap/muscle_up",
   "/progress",
   "/profile",
   "/profile/training",

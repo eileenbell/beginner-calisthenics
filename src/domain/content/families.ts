@@ -106,6 +106,27 @@ export const FAMILIES: ProgressionFamily[] = [
     description: "Gradual exposure to bearing weight overhead. Unlocks only once you've built the push and core prerequisites.",
     ladder: ["pike_hold_on_step", "wall_walk_partial", "chest_to_wall_hold"],
   },
+  {
+    id: "l_sit",
+    name: "L-sit",
+    pattern: "support",
+    description: "Pressing yourself up on straight arms while your legs stay off the floor, from heels down to legs straight out in front.",
+    ladder: ["foot_supported_l_sit", "tuck_l_sit", "one_leg_l_sit", "l_sit"],
+  },
+  {
+    id: "crow",
+    name: "Crow pose",
+    pattern: "support",
+    description: "A first arm balance: knees resting on your upper arms, weight shifted forward onto your hands until your feet lift.",
+    ladder: ["crow_lean", "one_foot_crow", "crow_pose"],
+  },
+  {
+    id: "pistol",
+    name: "Pistol squat",
+    pattern: "squat",
+    description: "Single-leg squats, from holding a support to sitting to lower boxes, then a full pistol squat.",
+    ladder: ["assisted_pistol_squat", "box_pistol_squat", "low_box_pistol_squat", "pistol_squat"],
+  },
 ];
 
 export const FAMILIES_BY_ID: ReadonlyMap<FamilyId, ProgressionFamily> = new Map(FAMILIES.map((f) => [f.id, f]));

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getExercise, isAvailable } from "@/domain";
-import { completeAnswers, firstIncompleteStep, readAnswers, scheduleSchema, type OnboardingAnswers } from "@/features/onboarding/answers";
+import { ALL_GOAL_OPTIONS, completeAnswers, firstIncompleteStep, goalsSchema, readAnswers, scheduleSchema, type OnboardingAnswers } from "@/features/onboarding/answers";
+import { GOALS } from "@/domain";
 import { previewProgramme } from "@/features/onboarding/preview";
 
 const base: OnboardingAnswers = {
@@ -57,6 +58,18 @@ describe("onboarding answers", () => {
   it("rejects an unknown time zone", () => {
     const parsed = scheduleSchema.safeParse({ daysPerWeek: 2, trainingDays: [2, 5], sessionMinutes: 15, environment: "park", timeZone: "Mars/Olympus" });
     expect(parsed.success).toBe(false);
+  });
+});
+
+describe("goal choices", () => {
+  it("offers every goal exactly once across the general and skill lists", () => {
+    expect(ALL_GOAL_OPTIONS.map((o) => o.id).sort()).toEqual([...GOALS].filter((g) => g !== "build_muscle").sort());
+  });
+
+  it("accepts skill goals alongside general ones, up to three in total", () => {
+    expect(goalsSchema.safeParse({ goals: ["first_push_up", "skill_crow"] }).success).toBe(true);
+    expect(goalsSchema.safeParse({ goals: ["skill_l_sit", "skill_pistol", "skill_muscle_up", "core_strength"] }).success).toBe(false);
+    expect(goalsSchema.safeParse({ goals: ["skill_backflip"] }).success).toBe(false);
   });
 });
 

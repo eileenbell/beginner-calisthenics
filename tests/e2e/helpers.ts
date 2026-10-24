@@ -17,6 +17,8 @@ export interface OnboardingOptions {
   days?: "2 days a week" | "3 days a week" | "4 days a week";
   minutes?: "About 15 minutes" | "About 25 minutes" | "About 40 minutes";
   equipment?: string[];
+  /** Runs on the plan summary, before the programme starts. */
+  onPlan?: (page: Page) => Promise<void>;
 }
 
 export async function signUp(page: Page, email = uniqueEmail(), name = "Alex Morgan"): Promise<string> {
@@ -55,6 +57,7 @@ export async function registerAndOnboard(page: Page, opts: OnboardingOptions = {
   await page.getByRole("button", { name: /build my plan/i }).click();
 
   await page.waitForURL("**/onboarding/plan");
+  if (opts.onPlan) await opts.onPlan(page);
   await page.getByRole("button", { name: /start my programme/i }).click();
   await page.waitForURL("**/today**");
   return email;

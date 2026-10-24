@@ -7,7 +7,10 @@ export type SkillId =
   | "core_hollow"
   | "dip_prep"
   | "hang_grip"
-  | "handstand_prep";
+  | "handstand_prep"
+  | "l_sit"
+  | "crow_pose"
+  | "pistol_squat";
 
 /**
  * A milestone is achieved when, in a single session, the user logs at least
@@ -167,6 +170,66 @@ export const SKILLS: SkillPath[] = [
       { id: "hs_wall_hold_30", title: "30-second wall handstand", description: "Chest-to-wall hold for 30 seconds.", exerciseId: "chest_to_wall_hold", sets: 1, minSeconds: 30 },
     ]),
   },
+  {
+    id: "l_sit",
+    name: "L-sit",
+    summary: "From a foot-supported hold to both legs straight out in front, held on straight arms.",
+    families: ["l_sit", "hollow"],
+    equipmentAnyOf: [],
+    gate: {
+      requiredMilestones: ["core_deadbug_3x8", "push_mid_incline_3x10"],
+      painFreeFamilies: ["push_up", "plank", "l_sit"],
+      explanation:
+        "L-sit work presses your bodyweight down through straight arms and wrists. It unlocks after 3 × 8 dead bugs each side and 3 × 10 knee-height incline push-ups, with no wrist, shoulder or core discomfort reported in the last 30 days.",
+    },
+    milestones: m("l_sit", [
+      { id: "lsit_supported_3x20", title: "Foot-supported L-sit, 3 × 20 seconds", description: "Three 20-second holds with your heels down.", exerciseId: "foot_supported_l_sit", sets: 3, minSeconds: 20 },
+      { id: "lsit_tuck_10", title: "10-second tuck L-sit", description: "Hips and feet off the floor for 10 seconds.", exerciseId: "tuck_l_sit", sets: 1, minSeconds: 10 },
+      { id: "lsit_tuck_3x15", title: "Tuck L-sit, 3 × 15 seconds", description: "Three 15-second tuck holds.", exerciseId: "tuck_l_sit", sets: 3, minSeconds: 15 },
+      { id: "lsit_one_leg_10", title: "One-leg L-sit, 10 seconds each side", description: "One leg straight, held for 10 seconds on each side.", exerciseId: "one_leg_l_sit", sets: 1, minSeconds: 10 },
+      { id: "lsit_first_5", title: "5-second L-sit", description: "Both legs straight and off the floor for 5 seconds.", exerciseId: "l_sit", sets: 1, minSeconds: 5 },
+      { id: "lsit_10", title: "10-second L-sit", description: "A full L-sit held for 10 seconds.", exerciseId: "l_sit", sets: 1, minSeconds: 10 },
+    ]),
+  },
+  {
+    id: "crow_pose",
+    name: "Crow pose",
+    summary: "Your first arm balance: lean forward, lift one foot, then both.",
+    families: ["crow", "push_up"],
+    equipmentAnyOf: [],
+    gate: {
+      requiredMilestones: ["push_low_incline_3x8", "core_plank_30"],
+      painFreeFamilies: ["push_up", "plank", "crow"],
+      explanation:
+        "Crow pose balances almost all your weight on bent arms and wrists. It unlocks after 3 × 8 low incline push-ups and a 30-second plank, with no wrist or shoulder discomfort reported in the last 30 days.",
+    },
+    milestones: m("crow_pose", [
+      { id: "crow_lean_3x20", title: "Crow lean, 3 × 20 seconds", description: "Three 20-second leans with your toes on the floor.", exerciseId: "crow_lean", sets: 3, minSeconds: 20 },
+      { id: "crow_one_foot_10", title: "One foot up, 10 seconds each side", description: "Balance with one foot lifted for 10 seconds on each side.", exerciseId: "one_foot_crow", sets: 1, minSeconds: 10 },
+      { id: "crow_first_5", title: "5-second crow", description: "Both feet off the floor for 5 seconds.", exerciseId: "crow_pose", sets: 1, minSeconds: 5 },
+      { id: "crow_15", title: "15-second crow", description: "A full crow pose held for 15 seconds.", exerciseId: "crow_pose", sets: 1, minSeconds: 15 },
+    ]),
+  },
+  {
+    id: "pistol_squat",
+    name: "Pistol squat",
+    summary: "Single-leg squat strength, from holding a support to a full pistol squat.",
+    families: ["pistol", "squat", "lunge"],
+    equipmentAnyOf: [],
+    gate: {
+      requiredMilestones: ["squat_bw_3x12", "squat_split_3x8"],
+      painFreeFamilies: ["squat", "lunge", "pistol"],
+      explanation:
+        "Pistol work puts all your weight through one knee and hip at deep angles. It unlocks after 3 × 12 bodyweight squats and 3 × 8 split squats each side, with no knee or hip discomfort reported in the last 30 days.",
+    },
+    milestones: m("pistol_squat", [
+      { id: "pistol_assisted_3x6", title: "Assisted pistols, 3 × 6 each side", description: "Three sets of 6 per leg, holding a support.", exerciseId: "assisted_pistol_squat", sets: 3, minReps: 6 },
+      { id: "pistol_box_3x5", title: "Box pistols, 3 × 5 each side", description: "Three sets of 5 per leg to a knee-height box.", exerciseId: "box_pistol_squat", sets: 3, minReps: 5 },
+      { id: "pistol_low_box_3x3", title: "Low box pistols, 3 × 3 each side", description: "Three sets of 3 per leg to a low step.", exerciseId: "low_box_pistol_squat", sets: 3, minReps: 3 },
+      { id: "pistol_first", title: "First pistol squat", description: "One full pistol squat on each leg.", exerciseId: "pistol_squat", sets: 1, minReps: 1 },
+      { id: "pistol_3", title: "3 pistol squats each side", description: "Three pistol squats per leg in a single set.", exerciseId: "pistol_squat", sets: 1, minReps: 3 },
+    ]),
+  },
 ];
 
 export const MILESTONES = SKILLS.flatMap((s) => s.milestones);
@@ -185,4 +248,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "first_progression", title: "Levelled up", description: "Your first move to a harder variation, earned through consistent, controlled reps." },
   { id: "first_push_up", title: "First push-up", description: "A full floor push-up with good control." },
   { id: "first_pull_up", title: "First pull-up", description: "A full pull-up from straight arms." },
+  { id: "first_l_sit", title: "First L-sit", description: "Both legs straight and off the floor, held with good control." },
+  { id: "first_crow", title: "First crow", description: "Both feet off the floor, balanced on your hands." },
+  { id: "first_pistol", title: "First pistol squat", description: "A full single-leg squat on each leg, with good control." },
 ];

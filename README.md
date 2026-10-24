@@ -15,8 +15,9 @@ More detail lives in `docs/`.
 - A deterministic 12-week programme engine (`src/domain/engine`), with no AI or randomness
 - Today dashboard built from real data
 - Workout player that saves every set as it's logged and survives a refresh, with a rest timer, pause, easier swaps, skips and per-exercise feedback
-- Exercise library (68 movements) with setup, cues, mistakes, safety notes and easier or harder options. Media is a labelled placeholder until licensed footage is added
-- Six skill pathways. Gated pathways stay locked until their prerequisites are met, and recent pain re-locks them
+- Exercise library (79 movements) with setup, cues, mistakes, safety notes and easier or harder options. Media is a labelled placeholder until licensed footage is added
+- Nine skill pathways. Gated pathways stay locked until their prerequisites are met, and recent pain re-locks them
+- Specific skill goals: L-sit, crow pose and pistol squat are trained in the programme once their basics are in place. Freestanding handstand, muscle-up and front lever have a roadmap that explains each phase, with the first phase trained through the existing pathways
 - Progress, workout history, profile settings, JSON data export and account deletion
 
 ## Running it locally
@@ -55,7 +56,7 @@ The service role key is never used by this app. Don't add it to Vercel.
 
 ## Deploying (Supabase free tier and Vercel Hobby)
 
-1. **Supabase project.** Create a project (Sydney region suits Australian users). Then apply the three migrations in `supabase/migrations` in order, either with `supabase link --project-ref <ref>` and `supabase db push`, or by pasting each file into the SQL editor. Don't run `supabase/local/bootstrap.sql`; it only exists for the local stand-in.
+1. **Supabase project.** Create a project (Sydney region suits Australian users). Then apply the migrations in `supabase/migrations` in filename order, either with `supabase link --project-ref <ref>` and `supabase db push`, or by pasting each file into the SQL editor. Don't run `supabase/local/bootstrap.sql`; it only exists for the local stand-in.
 2. **Auth URLs.** In Authentication, URL Configuration, set the Site URL to the live address and add `https://<live-domain>/**` to the redirect URLs. Email links come back to `/auth/callback`.
 3. **Email.** Supabase's built-in email sender is heavily rate limited and meant for testing. For a public launch, add custom SMTP. For a small demo, you can turn off "Confirm email" so new accounts don't wait on an email.
 4. **Vercel project.** Import the GitHub repo (framework preset: Next.js), add the three environment variables above, and deploy.

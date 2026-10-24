@@ -46,6 +46,22 @@ export const GOAL_OPTIONS: { id: Goal; title: string; body: string }[] = [
   { id: "foundations", title: "Just get started", body: "A steady, gentle introduction to bodyweight training. No particular target yet." },
 ];
 
+/**
+ * Specific skills people often aim for. The first three are trained in the
+ * programme once their basics are in place; the long-term ones train the
+ * foundations and show a roadmap for the rest.
+ */
+export const SKILL_GOAL_OPTIONS: { id: Goal; title: string; body: string; longTerm: boolean }[] = [
+  { id: "skill_l_sit", title: "Hold an L-sit", body: "Press up on straight arms with your legs out in front. Starts with a foot-supported hold once your push-up and core basics are in place.", longTerm: false },
+  { id: "skill_crow", title: "Balance in crow pose", body: "A first arm balance, knees resting on your arms. Starts with a supported lean once your push-ups and plank are strong enough.", longTerm: false },
+  { id: "skill_pistol", title: "Do a pistol squat", body: "A full squat on one leg. Starts with a hand support, then lower and lower boxes, once your squats and split squats are solid.", longTerm: false },
+  { id: "skill_handstand", title: "Freestanding handstand", body: "Wall work and learning to come down safely come first. FORM trains the foundations and shows the full build-up.", longTerm: true },
+  { id: "skill_muscle_up", title: "Muscle-up", body: "Pull-ups and dips first, then the transition over the bar. Needs a bar or rings. FORM trains the foundations and shows the full build-up.", longTerm: true },
+  { id: "skill_front_lever", title: "Front lever", body: "Hangs, pull-ups and core strength first, then tuck holds. Needs a bar or rings. FORM trains the foundations and shows the full build-up.", longTerm: true },
+];
+
+export const ALL_GOAL_OPTIONS = [...GOAL_OPTIONS, ...SKILL_GOAL_OPTIONS];
+
 export const EXPERIENCE_OPTIONS: { id: Experience; title: string; body: string }[] = [
   { id: "complete_beginner", title: "Complete beginner", body: "New to exercise, or coming back after a long break." },
   { id: "some_fitness", title: "I exercise occasionally", body: "Some walking, running, classes or sport, but new to bodyweight strength training." },
@@ -94,8 +110,8 @@ export const CONFIDENCE_OPTIONS = [
 ] as const;
 
 export const SESSION_OPTIONS: { minutes: SessionMinutes; title: string; body: string }[] = [
-  { minutes: 15, title: "About 15 minutes", body: "Short warm-up, four main exercises, quick cool-down." },
-  { minutes: 25, title: "About 25 minutes", body: "Full warm-up, five main exercises and a cool-down." },
+  { minutes: 15, title: "About 15 minutes", body: "Short warm-up, four main exercises, quick cool-down. No room for separate skill practice." },
+  { minutes: 25, title: "About 25 minutes", body: "Full warm-up, five main exercises and a cool-down. With a specific skill goal, one of the five is skill practice." },
   { minutes: 40, title: "About 40 minutes", body: "Six main exercises, plus extra skill practice once you're ready." },
 ];
 

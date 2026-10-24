@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { LATER_SKILLS, ROADMAPS } from "@/domain";
 import { allPathways, CATEGORY_LABELS, shortStageName, STATUS_LABELS, type PathwayCategory, type PathwayView } from "@/features/training/pathways";
 import { cn } from "@/lib/cn";
 import { getTrainingSnapshot } from "@/server/training";
@@ -66,6 +67,53 @@ export default async function SkillsPage({ searchParams }: PageProps<"/skills">)
           </li>
         ))}
       </ul>
+
+      {filter === "all" && (
+        <section aria-labelledby="long-term" className="space-y-3">
+          <div className="space-y-1">
+            <h2 id="long-term" className="font-display text-section font-bold text-white">
+              Long-term goals
+            </h2>
+            <p className="text-body text-text-secondary">
+              Bigger skills that take longer than one programme. FORM trains the foundations, and each roadmap shows the whole build-up and what it involves.
+            </p>
+          </div>
+          <ul className="grid grid-cols-1 gap-3 tablet:grid-cols-3">
+            {ROADMAPS.map((roadmap) => (
+              <li key={roadmap.id}>
+                <Card as="article" aria-labelledby={`r-${roadmap.id}`} className="flex h-full flex-col gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    {account.preferences.goals.includes(roadmap.goal) ? <Pill tone="accent">Your goal</Pill> : <Pill tone="outline">Long-term goal</Pill>}
+                  </div>
+                  <h3 id={`r-${roadmap.id}`} className="font-display text-card font-bold text-white">
+                    {roadmap.name}
+                  </h3>
+                  <p className="text-body text-text-secondary">{roadmap.summary}</p>
+                  <p className="text-caption text-text-secondary">{roadmap.phases.length} phases. The first one is in FORM now.</p>
+                  <Link
+                    href={`/skills/roadmap/${roadmap.id}`}
+                    className="mt-auto flex min-h-11 items-center gap-1 font-semibold text-accent-strong underline-offset-4 hover:underline"
+                  >
+                    See the build-up <ArrowRight aria-hidden className="size-4" />
+                    <span className="sr-only">: {roadmap.name}</span>
+                  </Link>
+                </Card>
+              </li>
+            ))}
+          </ul>
+          <Card tone="secondary" className="space-y-2">
+            <h3 className="font-semibold">Other skills people work towards</h3>
+            <p className="text-caption text-text-secondary">Advanced skills that FORM doesn&apos;t cover yet.</p>
+            <ul className="space-y-1.5 text-body">
+              {LATER_SKILLS.map((skill) => (
+                <li key={skill.name}>
+                  <span className="font-semibold text-text-primary">{skill.name}.</span> <span className="text-text-secondary">{skill.involves}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </section>
+      )}
 
       <Card tone="secondary" className="flex gap-3">
         <span aria-hidden className="flex size-10 shrink-0 items-center justify-center rounded-full bg-success-container text-state-success">

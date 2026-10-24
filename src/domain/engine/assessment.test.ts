@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { initialLevels, initialStates } from "./assessment";
+import { defaultFamilyState, initialLevels, initialStates, withDefaultStates } from "./assessment";
+import { FAMILIES } from "../content/families";
+import type { FamilyId, FamilyState } from "../types";
 import { newMilestones, skillReadiness } from "./milestones";
 import { SKILLS_BY_ID } from "../content/skills";
 
@@ -56,6 +58,25 @@ describe("baseline assessment", () => {
     const strong = initialLevels("complete_beginner", { plankSeconds: 75 }, []);
     expect(strong.plank.level).toBe(3);
     expect(strong.hollow.level).toBe(3);
+  });
+});
+
+describe("families added after sign-up", () => {
+  it("start existing users at the first step with the lowest target", () => {
+    expect(defaultFamilyState("pistol")).toMatchObject({ exerciseId: "assisted_pistol_squat", target: 4, successStreak: 0, paused: false });
+  });
+
+  it("fill only the missing families and leave saved progress alone", () => {
+    const saved = new Map<FamilyId, FamilyState>([["push_up", { ...defaultFamilyState("push_up"), exerciseId: "floor_push_up", target: 6 }]]);
+    const states = withDefaultStates(saved);
+    expect(states.size).toBe(FAMILIES.length);
+    expect(states.get("push_up")!.exerciseId).toBe("floor_push_up");
+    expect(states.get("crow")!.exerciseId).toBe("crow_lean");
+  });
+
+  it("new sign-ups get a state for every family, including the skill ones", () => {
+    const ids = initialStates("complete_beginner", {}, []).map((s) => s.familyId);
+    expect(ids).toEqual(expect.arrayContaining(["l_sit", "crow", "pistol"]));
   });
 });
 

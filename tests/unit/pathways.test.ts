@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { FamilyId, FamilyState } from "@/domain";
-import { PATHWAYS, pathwayView, shortStageName } from "@/features/training/pathways";
+import { allPathways, featuredPathway, PATHWAYS, pathwayView, shortStageName } from "@/features/training/pathways";
+import { goalTarget } from "@/features/training/goal-targets";
+import { GOALS } from "@/domain";
 
 const NOW = new Date("2026-11-10T00:00:00Z");
 const def = (id: string) => PATHWAYS.find((p) => p.id === id)!;
@@ -71,5 +73,44 @@ describe("skill pathways", () => {
     expect(shortStageName("Dead hang")).toBe("Dead hang");
     expect(shortStageName("Wall push-up")).toBe("Wall push-up");
     expect(shortStageName("Push-up")).toBe("Push-up");
+  });
+
+  it("keeps the new skill pathways locked until their basics are done", () => {
+    const crow = pathwayView(def("crow_pose"), input({ goals: ["skill_crow"], states: new Map([["crow", state("crow", "crow_lean")]]) }));
+    expect(crow.status).toBe("locked");
+    expect(crow.statusReason).toMatch(/low incline push-ups/);
+    const ready = pathwayView(
+      def("crow_pose"),
+      input({ goals: ["skill_crow"], achieved: new Set(["push_low_incline_3x8", "core_plank_30"]), states: new Map([["crow", state("crow", "crow_lean")]]) }),
+    );
+    expect(ready.status).toBe("focus");
+    expect(ready.currentStage).toBe(1);
+  });
+
+  it("features the skill once unlocked, and the pathway that builds towards it until then", () => {
+    const states = new Map([["l_sit", state("l_sit", "foot_supported_l_sit")], ["hollow", state("hollow", "dead_bug")]] as [FamilyId, FamilyState][]);
+    const locked = allPathways(input({ goals: ["skill_l_sit"], states }));
+    expect(featuredPathway(locked, ["skill_l_sit"]).def.id).toBe("core_hollow");
+    const open = allPathways(input({ goals: ["skill_l_sit"], states, achieved: new Set(["core_deadbug_3x8", "push_mid_incline_3x10"]) }));
+    expect(featuredPathway(open, ["skill_l_sit"]).def.id).toBe("l_sit");
+  });
+
+  it("still features push-ups for general goals with no pathway of their own", () => {
+    const views = allPathways(input({ goals: ["overall_strength"] }));
+    expect(featuredPathway(views, ["overall_strength"]).def.id).toBe("push_up_mastery");
+    expect(featuredPathway(views, ["movement_mobility"]).def.id).toBe("squat_control");
+  });
+
+  it("explains what each pathway chosen as a specific goal involves", () => {
+    for (const id of ["l_sit", "crow_pose", "pistol_squat"]) expect(def(id).involves?.length).toBeGreaterThan(80);
+  });
+
+  it("has a pathway target for every goal, and a roadmap for long-term skills", () => {
+    for (const goal of GOALS) {
+      const target = goalTarget(goal);
+      expect(target.skill.milestones).toContainEqual(target.milestone);
+    }
+    expect(goalTarget("skill_muscle_up").roadmap?.id).toBe("muscle_up");
+    expect(goalTarget("skill_crow").roadmap).toBeNull();
   });
 });

@@ -15,11 +15,20 @@ import {
   type SkillPath,
 } from "@/domain";
 
-// The six skill pathways shown in the app (Figma screens 3 and 4). Each one
+// The skill pathways shown in the app (Figma screens 3 and 4). Each one
 // follows a family ladder from the exercise library; the user's position comes
 // from their progression state, never from a fixed script.
 
-export type PathwayId = "push_up_mastery" | "first_pull_up" | "core_hollow" | "dip_prep" | "squat_control" | "handstand_prep";
+export type PathwayId =
+  | "push_up_mastery"
+  | "first_pull_up"
+  | "core_hollow"
+  | "dip_prep"
+  | "squat_control"
+  | "handstand_prep"
+  | "l_sit"
+  | "crow_pose"
+  | "pistol_squat";
 export type PathwayCategory = "push" | "pull" | "core" | "legs";
 
 export interface PathwayDef {
@@ -30,7 +39,10 @@ export interface PathwayDef {
   category: PathwayCategory;
   /** Ladder steps shown as stages (a family ladder can be longer). */
   stages: number;
+  /** Goals this pathway serves. It's marked as a focus pathway for them. */
   goals: Goal[];
+  /** What the skill involves, for pathways people choose as a specific goal. */
+  involves?: string;
 }
 
 export const PATHWAYS: PathwayDef[] = [
@@ -50,7 +62,7 @@ export const PATHWAYS: PathwayDef[] = [
     family: "pull_up",
     category: "pull",
     stages: 5,
-    goals: ["first_pull_up"],
+    goals: ["first_pull_up", "skill_muscle_up", "skill_front_lever"],
   },
   {
     id: "core_hollow",
@@ -59,7 +71,7 @@ export const PATHWAYS: PathwayDef[] = [
     family: "hollow",
     category: "core",
     stages: 4,
-    goals: ["core_strength", "foundations"],
+    goals: ["core_strength", "foundations", "skill_l_sit", "skill_front_lever"],
   },
   {
     id: "dip_prep",
@@ -68,7 +80,7 @@ export const PATHWAYS: PathwayDef[] = [
     family: "dip_prep",
     category: "push",
     stages: 3,
-    goals: [],
+    goals: ["skill_muscle_up"],
   },
   {
     id: "squat_control",
@@ -86,7 +98,40 @@ export const PATHWAYS: PathwayDef[] = [
     family: "handstand",
     category: "core",
     stages: 3,
-    goals: ["movement_mobility"],
+    goals: ["movement_mobility", "skill_handstand"],
+  },
+  {
+    id: "l_sit",
+    title: "L-Sit",
+    subtitle: "From a foot-supported hold to both legs straight out in front, on straight arms.",
+    family: "l_sit",
+    category: "core",
+    stages: 4,
+    goals: ["skill_l_sit"],
+    involves:
+      "An L-sit is a hold where you press yourself up on straight arms with your legs held straight out in front, off the floor. It takes pressing strength through straight arms and wrists, plus strong abs and hip flexors to lift your legs. You can do it on the floor; push-up handles, parallettes or a dip station give your feet more room.",
+  },
+  {
+    id: "crow_pose",
+    title: "Crow Pose",
+    subtitle: "Your first arm balance: lean forward, lift one foot, then both.",
+    family: "crow",
+    category: "core",
+    stages: 3,
+    goals: ["skill_crow"],
+    involves:
+      "In crow pose you balance on your hands with your knees resting on the backs of your upper arms and your feet off the floor. It's more about balance and wrist comfort than raw strength: you learn how far forward to lean, and use your fingers to steer. No equipment needed, just a cushion in front of you while you learn.",
+  },
+  {
+    id: "pistol_squat",
+    title: "Pistol Squat",
+    subtitle: "Single-leg squat strength, from holding a support to a full pistol squat.",
+    family: "pistol",
+    category: "legs",
+    stages: 4,
+    goals: ["skill_pistol"],
+    involves:
+      "A pistol squat is a full squat on one leg, with the other leg held straight out in front. It needs strong legs, good balance and enough ankle and hip mobility to sit deep with your heel down. The build-up uses a sturdy support for your hands, then boxes that get lower, so you control the depth at every stage.",
   },
 ];
 
@@ -192,11 +237,33 @@ export function allPathways(input: PathwayInput): PathwayView[] {
   return PATHWAYS.map((def) => pathwayView(def, input));
 }
 
+/**
+ * Which pathway to feature on the dashboard for each goal, in order of
+ * preference. A locked skill falls back to the pathway that builds towards it.
+ */
+const FEATURED_FOR: Record<Goal, PathwayId[]> = {
+  first_push_up: ["push_up_mastery"],
+  first_pull_up: ["first_pull_up"],
+  core_strength: ["core_hollow"],
+  movement_mobility: ["squat_control"],
+  overall_strength: [],
+  build_muscle: [],
+  foundations: [],
+  skill_l_sit: ["l_sit", "core_hollow"],
+  skill_crow: ["crow_pose", "push_up_mastery"],
+  skill_pistol: ["pistol_squat", "squat_control"],
+  skill_handstand: ["handstand_prep", "push_up_mastery"],
+  skill_muscle_up: ["first_pull_up", "dip_prep"],
+  skill_front_lever: ["first_pull_up", "core_hollow"],
+};
+
 /** The pathway to feature on the dashboard: the first goal's, falling back to push-ups. */
 export function featuredPathway(views: PathwayView[], goals: readonly Goal[]): PathwayView {
   for (const goal of goals) {
-    const match = views.find((v) => v.def.goals[0] === goal && v.status !== "locked" && v.status !== "needs_equipment");
-    if (match) return match;
+    for (const id of FEATURED_FOR[goal]) {
+      const match = views.find((v) => v.def.id === id && v.status !== "locked" && v.status !== "needs_equipment");
+      if (match) return match;
+    }
   }
   return views.find((v) => v.def.id === "push_up_mastery")!;
 }

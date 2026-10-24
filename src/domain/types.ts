@@ -25,8 +25,21 @@ export const GOALS = [
   "movement_mobility",
   "build_muscle",
   "foundations",
+  // Specific skills. The first three are trained in the programme; the last
+  // three are long-term roadmaps whose first phase is the foundation pathways.
+  "skill_l_sit",
+  "skill_crow",
+  "skill_pistol",
+  "skill_handstand",
+  "skill_muscle_up",
+  "skill_front_lever",
 ] as const;
 export type Goal = (typeof GOALS)[number];
+
+/** Goals that name a specific calisthenics skill rather than a general aim. */
+export function isSkillGoal(goal: Goal): boolean {
+  return goal.startsWith("skill_");
+}
 
 export const ENVIRONMENTS = ["home", "gym", "park", "mixed"] as const;
 export type TrainingEnvironment = (typeof ENVIRONMENTS)[number];
@@ -87,7 +100,10 @@ export type FamilyId =
   | "hollow"
   | "side_plank"
   | "dip_prep"
-  | "handstand";
+  | "handstand"
+  | "l_sit"
+  | "crow"
+  | "pistol";
 
 export type ValidationStatus =
   /** Written from the cited sources and checked internally for consistency. */

@@ -1,19 +1,20 @@
 import { getExercise } from "../content/exercises";
 import { getFamily } from "../content/families";
 import { SKILLS_BY_ID, type SkillId } from "../content/skills";
-import type {
-  DaysPerWeek,
-  Equipment,
-  Exercise,
-  FamilyId,
-  FamilyState,
-  Goal,
-  PlannedItem,
-  ProgrammePhase,
-  SessionMinutes,
-  SessionPlan,
-  SessionTemplate,
-  UserTrainingProfile,
+import {
+  isSkillGoal,
+  type DaysPerWeek,
+  type Equipment,
+  type Exercise,
+  type FamilyId,
+  type FamilyState,
+  type Goal,
+  type PlannedItem,
+  type ProgrammePhase,
+  type SessionMinutes,
+  type SessionPlan,
+  type SessionTemplate,
+  type UserTrainingProfile,
 } from "../types";
 import { availableAtLevel, clampToRange, expandEquipment, isAvailable, rangeOf } from "./catalogue";
 
@@ -135,7 +136,7 @@ const PHASE_OBJECTIVES: Record<ProgrammePhase, string> = {
 
 const MAIN_SLOTS: Record<SessionMinutes, number> = { 15: 4, 25: 5, 40: 6 };
 
-/** Goal-driven priority for the optional skill slot in 40-minute sessions. */
+/** Goal-driven priority for the skill practice slot. */
 const GOAL_SKILL_FAMILIES: Record<Goal, FamilyId[]> = {
   first_pull_up: ["pull_up", "row"],
   first_push_up: ["plank", "push_up"],
@@ -144,11 +145,21 @@ const GOAL_SKILL_FAMILIES: Record<Goal, FamilyId[]> = {
   overall_strength: ["dip_prep", "pike", "hollow"],
   build_muscle: ["dip_prep", "pike"],
   foundations: ["hollow", "side_plank"],
+  skill_l_sit: ["l_sit", "hollow"],
+  skill_crow: ["crow", "plank"],
+  skill_pistol: ["pistol", "lunge"],
+  // Long-term skills practise their foundations until FORM programmes the skill itself.
+  skill_handstand: ["handstand", "pike", "hollow"],
+  skill_muscle_up: ["pull_up", "dip_prep", "row"],
+  skill_front_lever: ["pull_up", "hollow", "row"],
 };
 
 const GATED_FAMILIES: Partial<Record<FamilyId, SkillId>> = {
   handstand: "handstand_prep",
   dip_prep: "dip_prep",
+  l_sit: "l_sit",
+  crow: "crow_pose",
+  pistol: "pistol_squat",
 };
 
 export interface BuildSessionInput {
@@ -224,18 +235,28 @@ export function buildSessionPlan(input: BuildSessionInput): SessionPlan {
   const pikeIndex = slots.indexOf("pike");
   if (pikeIndex >= 0 && pushLevel(input.states) < 3) slots[pikeIndex] = "side_plank";
 
-  for (const familyId of slots) {
-    if (main.length >= MAIN_SLOTS[minutes]) break;
-    const { resolved, notice } = resolveSlot(familyId, input, used);
-    if (notice && !notices.includes(notice)) notices.push(notice);
-    if (!resolved || used.has(resolved.familyId)) continue;
-    used.add(resolved.familyId);
-    main.push(toPlanned(resolved, baseSets(minutes, main.length), { week, returning, lighter }));
-  }
+  // Skill practice runs in every 40-minute session. With a specific skill goal
+  // it also runs in 25-minute sessions, in place of the fifth main exercise.
+  const skillGoals = profile.goals.filter(isSkillGoal);
+  const shortSkillSlot = minutes === 25 && skillGoals.length > 0;
 
-  // Skill slot for 40-minute sessions: first goal-relevant family not already used.
-  if (minutes === 40) {
-    const priorities = profile.goals.flatMap((g) => GOAL_SKILL_FAMILIES[g]).concat(["hollow", "side_plank"]);
+  let nextSlot = 0;
+  const fillMain = (limit: number) => {
+    while (nextSlot < slots.length && main.length < limit) {
+      const { resolved, notice } = resolveSlot(slots[nextSlot++], input, used);
+      if (notice && !notices.includes(notice)) notices.push(notice);
+      if (!resolved || used.has(resolved.familyId)) continue;
+      used.add(resolved.familyId);
+      main.push(toPlanned(resolved, baseSets(minutes, main.length), { week, returning, lighter }));
+    }
+  };
+  fillMain(MAIN_SLOTS[minutes] - (shortSkillSlot ? 1 : 0));
+
+  if (minutes === 40 || shortSkillSlot) {
+    // Skill goals come first. Shorter sessions only use them, so a locked skill
+    // falls back to the session's own fifth exercise rather than generic core work.
+    const goals = shortSkillSlot ? skillGoals : [...skillGoals, ...profile.goals.filter((g) => !isSkillGoal(g))];
+    const priorities = goals.flatMap((g) => GOAL_SKILL_FAMILIES[g]).concat(shortSkillSlot ? [] : ["hollow", "side_plank"]);
     for (const familyId of priorities) {
       if (used.has(familyId)) continue;
       if (familyId === "pike" && pushLevel(input.states) < 3) continue;
@@ -252,6 +273,8 @@ export function buildSessionPlan(input: BuildSessionInput): SessionPlan {
       break;
     }
   }
+  // A 25-minute session whose skill isn't available yet keeps its fifth exercise.
+  fillMain(MAIN_SLOTS[minutes]);
 
   const items: PlannedItem[] = [...buildWarmup(main, minutes), ...main, ...buildCooldown(main)];
   return {
@@ -307,15 +330,16 @@ function simple(exerciseId: string, block: "warmup" | "cooldown"): PlannedItem {
   };
 }
 
-const HAND_SUPPORTED: FamilyId[] = ["push_up", "plank", "pike", "handstand", "side_plank"];
-const PUSHING: FamilyId[] = ["push_up", "pike", "handstand", "dip_prep"];
+const HAND_SUPPORTED: FamilyId[] = ["push_up", "plank", "pike", "handstand", "side_plank", "l_sit", "crow"];
+const PUSHING: FamilyId[] = ["push_up", "pike", "handstand", "dip_prep", "l_sit", "crow"];
+const LEGS: FamilyId[] = ["squat", "lunge", "pistol"];
 
 function buildWarmup(main: PlannedItem[], minutes: SessionMinutes): PlannedItem[] {
   const families = new Set(main.map((m) => m.familyId));
   const ids = ["march_in_place", "arm_circles"];
   if ([...families].some((f) => f && HAND_SUPPORTED.includes(f))) ids.push("wrist_prep");
   ids.push("cat_cow");
-  if (families.has("hinge") || families.has("squat")) ids.push("hip_hinge_drill");
+  if (families.has("hinge") || families.has("squat") || families.has("pistol")) ids.push("hip_hinge_drill");
   if (minutes >= 25) ids.push("lunge_with_reach");
   if (minutes >= 25 && [...families].some((f) => f && PUSHING.includes(f))) ids.push("wall_scapular_push_up");
   return ids.map((id) => simple(id, "warmup"));
@@ -324,7 +348,7 @@ function buildWarmup(main: PlannedItem[], minutes: SessionMinutes): PlannedItem[
 function buildCooldown(main: PlannedItem[]): PlannedItem[] {
   const families = new Set(main.map((m) => m.familyId));
   const ids = ["childs_pose"];
-  if (families.has("squat") || families.has("lunge")) ids.push("kneeling_hip_flexor_stretch");
+  if ([...families].some((f) => f && LEGS.includes(f))) ids.push("kneeling_hip_flexor_stretch");
   if (families.has("hinge")) ids.push("supine_hamstring_stretch");
   if ([...families].some((f) => f && PUSHING.includes(f))) ids.push("chest_opener");
   return ids.map((id) => simple(id, "cooldown"));

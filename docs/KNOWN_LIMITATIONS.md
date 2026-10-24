@@ -4,7 +4,7 @@ What isn't finished, what was only partly verified, and what to fix before a wid
 
 ## Content and safety
 
-- **No professional review yet.** All 68 exercises and the progression rules are `internal_review` only. See `EXERCISE_CONTENT_REVIEW.md`.
+- **No professional review yet.** All 79 exercises, the progression rules and the long-term skill roadmaps are `internal_review` only. See `EXERCISE_CONTENT_REVIEW.md`.
 - **Research checked at abstract level.** Full-text access to journals was blocked during research, so some findings are marked as needing confirmation in `docs/research/SOURCES.md`.
 - **No demonstration media.** Every exercise uses a labelled placeholder. Licensed photos or video are needed.
 - **No pre-exercise screening.** The landing page and sign-up form carry a short health note, but there's no questionnaire (such as one modelled on the ESSA APSS) before training starts.
@@ -22,6 +22,8 @@ What isn't finished, what was only partly verified, and what to fix before a wid
 - **No reminders or notifications.**
 - **Rest and pause timers** live in the browser (`localStorage`). They survive a refresh on the same device, but switching devices mid-workout restores the logged sets, not the timer.
 - **Time zones.** The schedule uses the time zone captured at onboarding. Travelling across time zones doesn't move sessions.
+- **Long-term skills are roadmaps, not programmes.** For a freestanding handstand, muscle-up or front lever, FORM trains the first phase through existing pathways and describes the later phases. It doesn't schedule or track work beyond phase 1 yet.
+- **No skill practice in 15-minute sessions.** Choosing a specific skill with 15-minute sessions highlights its pathway but doesn't add it to workouts. The plan summary says so.
 - **One programme type.** The Foundations 12-week block. Starting a new block carries progression levels forward; there are no specialised programmes yet.
 - **Progress charts** are lists and grids, not trend charts.
 

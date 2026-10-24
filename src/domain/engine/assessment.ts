@@ -137,3 +137,28 @@ export function initialStates(experience: Experience, input: AssessmentInput, eq
     };
   });
 }
+
+/**
+ * Starting state for a family with no saved progress. New families can be
+ * added after someone signs up; they start at the first step, like a beginner.
+ */
+export function defaultFamilyState(familyId: FamilyId): FamilyState {
+  const exercise = ladderStepAt(familyId, 1);
+  return {
+    familyId,
+    exerciseId: exercise.id,
+    target: rangeOf(exercise)[0],
+    successStreak: 0,
+    difficultStreak: 0,
+    painReports: [],
+    paused: false,
+  };
+}
+
+/** Fills in every family missing from saved progress with its starting state. */
+export function withDefaultStates(states: Map<FamilyId, FamilyState>): Map<FamilyId, FamilyState> {
+  for (const family of FAMILIES) {
+    if (!states.has(family.id)) states.set(family.id, defaultFamilyState(family.id));
+  }
+  return states;
+}

@@ -23,14 +23,14 @@ Defined once in `src/app/globals.css` under Tailwind v4 `@theme`, taken from the
 | --- | --- | --- |
 | Figma 1, Personal Dashboard | `/today` | Week pill, greeting, weekly rhythm, today's session card, featured pathway, all from real data |
 | Figma 2, Guided Workout Player | `/workout/[sessionId]` | Sticky header with end and pause, progress bar, media frame with form tip, set chips, rep stepper or hold timer |
-| Figma 3, Skills | `/skills` | Pathway cards with status, stage and readiness |
+| Figma 3, Skills | `/skills` | Pathway cards with status, stage and readiness. The long-term goals section below them is a filled gap |
 | Figma 4, Skill Progression | `/skills/[pathwayId]` | Current focus, prerequisites, progression tree, milestones, practice log |
 | Figma 5, Exercise Detail | `/exercises/[exerciseId]` | Three stats, steps, cues, safety panel, form check, adaptations |
 | Figma 6, Progress | `/progress` | Range tabs, metrics, consistency grid, improvements, milestones |
 | Stitch 7 | `/` | Landing |
 | Stitch 8 | `/sign-up`, `/sign-in` | Email and password only |
 | Stitch 9–13 | `/onboarding/*` | Goals, experience and starting point, schedule, equipment, plan |
-| Filled gaps | `/workouts`, `/history/[id]`, `/exercises`, `/profile`, `/profile/training`, rest timer, feedback form, summary, paused overlay, dialogs, error and empty states | Built from the same tokens and components |
+| Filled gaps | `/skills/roadmap/[roadmapId]` (long-term skill roadmaps), the "Or aim for a specific move" group on the goals step and in training settings, `/workouts`, `/history/[id]`, `/exercises`, `/profile`, `/profile/training`, rest timer, feedback form, summary, paused overlay, dialogs, error and empty states | Built from the same tokens and components |
 
 ## Deliberate deviations
 
@@ -46,6 +46,7 @@ Each of these was either decided with Eileen or needed for honesty, safety or ac
 8. **Upcoming pathway stages on Today** use secondary text colour instead of 50% opacity, which failed contrast.
 9. **Bottom navigation on phones** follows the Figma "Bottom nav" component. On desktop the same destinations are in a side rail, since Figma had no desktop layouts.
 10. **Player header** is sticky rather than fixed so it can't overlap content on short screens.
+11. **Skill goals and roadmaps** had no Figma or Stitch design. They reuse the goal choice cards, pathway cards, pills and stage list styles. Roadmap phases that FORM doesn't train yet are marked "Not in FORM yet" so they can't be mistaken for programmed work.
 
 ## Stitch content removed
 
@@ -63,4 +64,4 @@ These appeared in the Stitch concepts and were removed because they're unsupport
 - Timers use `role="timer"` with a text alternative; the progress bar has a label and values.
 - Dialogs use the native `<dialog>` element, so Escape and focus trapping work.
 - Decorative icons are `aria-hidden`; meaning is never carried by colour alone.
-- Axe WCAG 2.2 AA audits pass on 15 pages at 390, 768 and 1440 px (see `TEST_REPORT.md`).
+- Axe WCAG 2.2 AA audits pass on 17 pages at 390, 768 and 1440 px (see `TEST_REPORT.md`).

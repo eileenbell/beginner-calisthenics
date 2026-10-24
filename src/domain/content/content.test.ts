@@ -1,14 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { EXERCISES, EXERCISES_BY_ID } from "./exercises";
 import { FAMILIES } from "./families";
+import { LATER_SKILLS, ROADMAPS } from "./roadmaps";
 import { ACHIEVEMENTS, MILESTONES, SKILLS } from "./skills";
+import { GOALS, isSkillGoal } from "../types";
 import { availableAtLevel, rangeOf } from "../engine/catalogue";
 
 describe("exercise catalogue", () => {
   it("has unique ids and a manageable beginner-sized library", () => {
     expect(new Set(EXERCISES.map((e) => e.id)).size).toBe(EXERCISES.length);
     expect(EXERCISES.length).toBeGreaterThanOrEqual(40);
-    expect(EXERCISES.length).toBeLessThanOrEqual(70);
+    expect(EXERCISES.length).toBeLessThanOrEqual(90);
   });
 
   it.each(EXERCISES.map((e) => [e.id, e] as const))("%s has complete, beginner-readable content", (_id, e) => {
@@ -127,7 +129,7 @@ describe("skills and achievements", () => {
 
   it("includes the required brief skills and achievements", () => {
     const ids = SKILLS.map((s) => s.id);
-    for (const id of ["push_up_mastery", "first_pull_up", "squat_control", "core_hollow", "dip_prep", "hang_grip", "handstand_prep"]) {
+    for (const id of ["push_up_mastery", "first_pull_up", "squat_control", "core_hollow", "dip_prep", "hang_grip", "handstand_prep", "l_sit", "crow_pose", "pistol_squat"]) {
       expect(ids).toContain(id);
     }
     expect(ACHIEVEMENTS.map((a) => a.id)).toEqual([
@@ -136,10 +138,55 @@ describe("skills and achievements", () => {
       "first_progression",
       "first_push_up",
       "first_pull_up",
+      "first_l_sit",
+      "first_crow",
+      "first_pistol",
     ]);
   });
 
   it("handstand preparation is gated", () => {
     expect(SKILLS.find((s) => s.id === "handstand_prep")!.gate).toBeDefined();
+  });
+
+  it.each(["l_sit", "crow_pose", "pistol_squat"])("%s is gated behind foundation milestones and recent pain", (id) => {
+    const skill = SKILLS.find((s) => s.id === id)!;
+    expect(skill.gate?.requiredMilestones.length).toBeGreaterThan(0);
+    // The gate never depends on the skill's own milestones.
+    for (const gate of skill.gate!.requiredMilestones) expect(skill.milestones.some((m) => m.id === gate)).toBe(false);
+    expect(skill.gate!.painFreeFamilies).toContain(skill.families[0]);
+  });
+
+  it("each new skill ladder needs no equipment and starts at an easy difficulty", () => {
+    for (const familyId of ["l_sit", "crow", "pistol"] as const) {
+      const family = FAMILIES.find((f) => f.id === familyId)!;
+      for (const id of family.ladder) expect(EXERCISES_BY_ID.get(id)!.equipmentAnyOf).toEqual([]);
+      expect(EXERCISES_BY_ID.get(family.ladder[0])!.difficulty).toBeLessThanOrEqual(3);
+    }
+  });
+});
+
+describe("long-term roadmaps", () => {
+  it("covers every long-term skill goal exactly once", () => {
+    const trained = new Set(["skill_l_sit", "skill_crow", "skill_pistol"]);
+    const longTerm = GOALS.filter((g) => isSkillGoal(g) && !trained.has(g));
+    expect(ROADMAPS.map((r) => r.goal).sort()).toEqual([...longTerm].sort());
+  });
+
+  it.each(ROADMAPS.map((r) => [r.id, r] as const))("%s starts with FORM pathways and cites its sources", (_id, roadmap) => {
+    expect(roadmap.phases.length).toBeGreaterThanOrEqual(3);
+    expect(roadmap.phases[0].pathways.length).toBeGreaterThan(0);
+    for (const phase of roadmap.phases) {
+      expect(phase.steps.length).toBeGreaterThan(0);
+      expect(phase.benchmark.length).toBeGreaterThan(10);
+      for (const id of phase.pathways) expect(SKILLS.some((s) => s.id === id)).toBe(true);
+    }
+    expect(roadmap.safety.length).toBeGreaterThan(0);
+    for (const s of roadmap.sources) expect(s).toMatch(/^S\d+$/);
+  });
+
+  it("makes no promises about how long anything takes", () => {
+    const text = JSON.stringify([ROADMAPS, LATER_SKILLS]);
+    expect(text).not.toMatch(/\b\d+\s*(weeks?|months?|years?)\b/i);
+    expect(text).not.toMatch(/guarantee/i);
   });
 });

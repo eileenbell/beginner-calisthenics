@@ -39,7 +39,7 @@ Personal access tokens must have **organisation** access to create projects. A t
 
 ## 2. Create the database
 
-Apply the three files in `supabase/migrations`, in filename order. Either:
+Apply the files in `supabase/migrations`, in filename order. Either:
 
 ```bash
 npx supabase@latest link --project-ref <ref>
@@ -50,7 +50,7 @@ or paste each file into the dashboard's SQL editor and run it, oldest first.
 
 Do **not** run `supabase/local/bootstrap.sql`. It recreates parts of Supabase for local testing only.
 
-To check: the Table editor should show 18 tables, and `exercises` should have 68 rows.
+To check: the Table editor should show 18 tables, and `exercises` should have 79 rows.
 
 ## 3. Get the public keys
 

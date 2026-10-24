@@ -10,7 +10,8 @@ import { EXERCISES } from "../src/domain/content/exercises";
 import { ACHIEVEMENTS, SKILLS } from "../src/domain/content/skills";
 import { easierLibraryOptions, harderOptions } from "../src/domain/engine/catalogue";
 
-export const REFERENCE_MIGRATION = "supabase/migrations/20261024000300_reference_data.sql";
+// Each content change ships as a new migration; earlier ones stay as applied.
+export const REFERENCE_MIGRATION = "supabase/migrations/20261024000400_skill_goals_reference_data.sql";
 
 function lit(value: string | null | undefined): string {
   if (value === null || value === undefined) return "null";

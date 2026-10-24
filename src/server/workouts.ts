@@ -4,6 +4,7 @@ import {
   evaluateExposure,
   getExercise,
   newMilestones,
+  withDefaultStates,
   type ExerciseFeedback,
   type FamilyId,
   type FamilyState,
@@ -74,7 +75,8 @@ export async function completeSession(sessionId: string): Promise<{ ok: boolean;
   if (failed?.error) return { ok: false, error: "We couldn't load this workout to finish it. Please try again." };
 
   const outcomes = sessionOutcomes(session, (logs.data ?? []) as SetLogRow[], (feedback.data ?? []) as FeedbackRow[]);
-  const states = new Map<FamilyId, FamilyState>(((progress.data ?? []) as ProgressRow[]).map((r) => [r.family_id, toFamilyState(r)]));
+  // Families added after sign-up have no saved row yet; complete_workout creates it.
+  const states = withDefaultStates(new Map<FamilyId, FamilyState>(((progress.data ?? []) as ProgressRow[]).map((r) => [r.family_id, toFamilyState(r)])));
   const now = new Date();
   const decisions: { itemIndex: number; decision: ProgressionDecision }[] = [];
 
