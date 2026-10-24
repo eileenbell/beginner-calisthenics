@@ -73,7 +73,7 @@ Weekly "add a rep regardless" progression is not used.
 
 **Convention (S12).** Community-tested progression ladders and the "3×5 to 3×8, then move up" double-progression approach are widely used by beginners. They are not trial-tested as a system but are internally logical, conservative and transparent.
 
-**Decision.** The rule set (full detail in [CONTENT_MODEL.md](../specs/CONTENT_MODEL.md) and the engine source):
+**Decision.** The rule set (full detail in [EXERCISE_CONTENT_REVIEW.md](../EXERCISE_CONTENT_REVIEW.md) and the engine source):
 
 - **Progress the variation** when the user has hit the top of the rep or time range on every prescribed set, reported good control, and rated the exercise *about right* or *too easy*, in **two consecutive exposures**. A single *too easy* with top-of-range performance counts as a strong signal and progresses after one exposure.
 - **Increase reps** within the range when all sets reached the current target with good control and no difficulty flag.

@@ -13,7 +13,7 @@ import { clampToRange, nextEasier, nextHarder, rangeOf, stepOf } from "./catalog
 //
 // Deterministic and explainable: every call returns the new state plus a
 // decision with a plain-language reason. The rules are documented in
-// docs/research/EXERCISE_SCIENCE.md section 7 and docs/specs/CONTENT_MODEL.md.
+// docs/research/EXERCISE_SCIENCE.md section 7 and docs/EXERCISE_CONTENT_REVIEW.md.
 //
 // Safety rules that must never be weakened:
 //  - Completing a session is never, on its own, a reason to progress.

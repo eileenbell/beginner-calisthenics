@@ -84,6 +84,10 @@ export function SignUpForm() {
       <SubmitButton className="w-full" pendingLabel="Creating your account…">
         Continue to personalisation <ArrowRight aria-hidden className="size-5" />
       </SubmitButton>
+      <p className="text-caption text-text-secondary">
+        FORM gives general fitness guidance for healthy adults. It isn&apos;t medical advice. If you have an injury or a health condition, or
+        you&apos;re pregnant, check with a health professional before you start.
+      </p>
     </form>
   );
 }
